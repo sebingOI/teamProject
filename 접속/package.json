@@ -1,0 +1,23 @@
+{
+    "dependencies": {
+      "dgram": "^1.0.1",
+      "json": "^11.0.0",
+      "morgan": "^1.10.0",
+      "mysql": "^2.18.1",
+      "mysql2": "^2.3.3",
+      "node.js": "^0.0.1-security",
+      "nunjucks": "^3.2.3",
+      "sequelize": "^7.0.0-alpha.4",
+      "sequelize-cli": "^6.3.0",
+      "start": "^5.1.0",
+      "strat": "^1.2.0"
+    },
+    "devDependencies": {
+      "express": "^4.17.2",
+      "nodemon": "^2.0.15"
+    },
+    "scripts": {
+      "start": "nodemon UDP"
+    }
+  }
+  
