@@ -21,6 +21,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use('/',indexRouter);
+app.use('/login',indexRouter);
 app.use('/join',indexRouter);
 //app.use('/users',usersRouter);
 
