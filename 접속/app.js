@@ -23,12 +23,17 @@ socket.on('message', function(msg, rinfo) {
     if (cs.cmd == "CS") {
         socket.send(cmd, id, Ipaddress, port, 
             function(err) {
-                if (err) {
+               if (err) {
                     console.log('메세지 전송 실패');
                     return;
                 }
             }
-        );
+        ); 
         console.log('메세지 전송 성공');
+    }
+
+    if (cs.cmd == "cLO")
+    {
+        
     }
 })
