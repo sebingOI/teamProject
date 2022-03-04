@@ -26,7 +26,7 @@ module.exports = class User extends Sequelize.Model {
         type: Sequelize.INTEGER,  //Enum
         allowNull: true,
       },
-			Rz: {
+			Ry: {
         type: Sequelize.FLOAT,
         allowNull: true,
       },
@@ -57,7 +57,11 @@ module.exports = class User extends Sequelize.Model {
 			pExp: {
 				type: Sequelize.INTEGER(30),
 				allowNull: true,
-    }}, {
+      },
+      pAct: {
+        type: Sequelize.INTEGER,
+        allowNull: true
+      }}, {
       sequelize,
       timestamps: false,
       underscored: false,
