@@ -4,6 +4,7 @@ var dgram = require('dgram');
 var CS = JSON.stringify({ cmd: "CS", id: "asdf" });
 var DBS = JSON.stringify({ cmd: "DBs", nick: "kk" })
 var CLO = JSON.stringify({ cmd: "cLo", nick: "kk" })
+var MAO = JSON.stringify({ cmd: "mAo", mID: "11" })
 
 var client = dgram.createSocket('udp4');
 client.send(CS, 0, CS.length, PORT, HOST, function(err, bytes) {
@@ -21,8 +22,15 @@ client.on('message',function(msg,rinfo){
         });
     }
     const cloin = JSON.parse(msg.toString());
-    if (cloin.cmd = "cLs") {
+    if (cloin.cmd == "cLs") {
         client.send(CLO, 0, CLO.length, PORT, HOST, function(err, bytes) {
+            if (err) throw err;
+            console.log('UDP message send to' + HOST + ":" + PORT);
+        });
+    }
+    const maoin = JSON.parse(msg.toString());
+    if (maoin.cmd == "mAs") {
+        client.send(MAO, 0, MAO.length, PORT, HOST, function(err, bytes) {
             if (err) throw err;
             console.log('UDP message send to' + HOST + ":" + PORT);
         });

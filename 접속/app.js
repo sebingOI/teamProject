@@ -81,8 +81,6 @@ socket.on('listening', function() {
 });
 
 let str;
-let cnt = 0;
-let cscnt;
 
 socket.on('message', function(msg, rinfo) {
     str = JSON.parse(msg.toString());
@@ -100,54 +98,42 @@ socket.on('message', function(msg, rinfo) {
             socket.send(message, 0, message.length, udb.port, 
                 function(err) {
                     if (err) {
-                        console.log('메세지 전송 실패');
+                        //console.log('메세지 전송 실패');
                         return;
                     }
                 }
             );
-            console.log('메세지 전송 성공');
+            //console.log('메세지 전송 성공');
         } catch (err) {
             console.error(err);
         }
         // 1초 카운트한 뒤
         //console.log(str);
     } 
-<<<<<<< HEAD
 
-    function countTime(cnt)
-    {
+    // function countTime(cnt)
+    // {
+    //     if(cnt <= 1)
+    //         clearInterval(cscnt); 
+    //     //console.log(cnt);
+    // }
+
+    let cscnt = setInterval(() => {
+        //1초마다 카운트를 하겠다.
         if(cnt <= 1)
             clearInterval(cscnt);
-        //console.log(cnt);
-    }
+    }, 1000);
 
-    let cscnt = setInterval(function() {countTime(cnt--)}, 1000);
     //console.log(cscnt);
-     if (str.cmd == "DBs" && cnt > 0) {
+    if (str.cmd == "DBs" && cnt > 0) {
         //console.log("vvv");
         clearInterval(cscnt);
         cnt = 6;
-=======
-    cnt = 0;
-    cscnt = setTimeout(function() {
-    socket.on('close', function() {
-        console.log('close event');
-        })
-        cnt = 1000;
-    }, 1000);
-    if (cnt == 1000) {
-        //로그아웃 처리
-        // socket.on('close', function() {
-        //     console.log('close event');
-        // });
-     }
-     if (str.cmd == "DBs") {
->>>>>>> 2d86700441133a0ec5f79cb2edc1b6c1bc688de8
         try {
             // 배열 전체 보내야함
             const ms = JSON.stringify({cmd: "cLs", charr: charr })
 
-            console.log(rinfo.port);
+            //console.log(rinfo.port);
 
             let cls = new CLS("cLs", charr, rinfo.Ipaddress, rinfo.port);
             socket.send(ms, 0, ms.length, rinfo.port, rinfo.Ipaddress, 
@@ -157,41 +143,27 @@ socket.on('message', function(msg, rinfo) {
                     }
                 }
             );
-            console.log('메세지 전송 성공');
+            //console.log('메세지 전송 성공');
         } catch (err) {
             console.error(err);
         }
     } else {
-        console.log("참여자 배열 로그아웃 처리");
+        //console.log("참여자 배열 로그아웃 처리");
     }
-<<<<<<< HEAD
-    let clcnt = setInterval(function() {countTime(cnt--)}, 1000);
-    clearInterval(clcnt);
-     if (str.cmd == "cLo" && clcnt < 0) {
-         clearTimeout(clcnt);
-         cnt = 6;
-=======
-    cnt = 0;
-    cscnt = setTimeout(function() {
-    socket.on('close', function() {
-        console.log('close event');
-        })
-        cnt = 1000;
+    let clcnt = setInterval(() => {
+        if(cnt <= 1)
+            clearInterval(clcnt);
     }, 1000);
-    if (cnt == 1000) {
-        //로그아웃 처리
-        // socket.on('close', function() {
-        //     console.log('close event');
-        // });
-     }
-     if (str.cmd == "cLo") {
->>>>>>> 2d86700441133a0ec5f79cb2edc1b6c1bc688de8
+    //clearInterval(clcnt);
+    if (str.cmd == "cLo" && cnt > 0) {
+        clearTimeout(clcnt);
+        cnt = 6;
         try {
             // 배열 전체 보내야함
             //console.log(csid);
             const message = JSON.stringify({cmd: "mAs", marr: marr})
             let mas = new MAS("mAs", marr, rinfo.Ipaddress, rinfo.port);
-            socket.send(message, 0, message.length, mas.port, 
+            socket.send(message, 0, message.length, rinfo.port, rinfo.Ipaddress,
                 function(err) {
                     if (err) {
                         console.log('메세지 전송 실패');
@@ -204,7 +176,10 @@ socket.on('message', function(msg, rinfo) {
             console.error(err);
         }
      }  else {
-        console.log("몬스터 배열 로그아웃 처리");
+        //console.log("몬스터 배열 로그아웃 처리");
     }
-    //  //mAo는 그냥 카운트해서 오면 접속 끝내고 안올 시 로그아웃 처리
+    if (str.cmd == "mAo" && cnt > 0) {
+        clearTimeout(clcnt);
+        cnt = 6;
+     }
 });
