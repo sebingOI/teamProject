@@ -82,6 +82,8 @@ socket.on('listening', function() {
 });
 
 let str;
+let cnt = 0;
+let cscnt;
 
 socket.on('message', function(msg, rinfo) {
     str = JSON.parse(msg.toString());
@@ -111,8 +113,8 @@ socket.on('message', function(msg, rinfo) {
         // 1초 카운트한 뒤
         //console.log(str);
     } 
-    let cnt = 0;
-    let cscnt = setTimeout(function() {
+    cnt = 0;
+    cscnt = setTimeout(function() {
     socket.on('close', function() {
         console.log('close event');
         })
@@ -142,8 +144,8 @@ socket.on('message', function(msg, rinfo) {
             console.error(err);
         }
     }
-    let cnt = 0;
-    let cscnt = setTimeout(function() {
+    cnt = 0;
+    cscnt = setTimeout(function() {
     socket.on('close', function() {
         console.log('close event');
         })
