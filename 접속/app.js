@@ -109,14 +109,15 @@ socket.on('message', function(msg, rinfo) {
                                 
                                 const message = JSON.stringify({cmd:"GG"});
                                 socket.send(message, 0, message.length, rinfo.port, 
-                                function(err){                                        if(err){
+                                function(err){
+                                    if(err){
                                         return;
                                     }
                                 })
                             }
                         )
                     }
-                });
+                })
             }}                
         )
     }
