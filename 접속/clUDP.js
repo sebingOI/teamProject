@@ -35,4 +35,8 @@ client.on('message',function(msg,rinfo){
             console.log('UDP message send to' + HOST + ":" + PORT);
         });
     }
+    if(getInfo.cmd == "GG")
+    {
+        console.log(getInfo.cmd);
+    }
 });
