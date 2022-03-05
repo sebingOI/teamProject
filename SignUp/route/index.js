@@ -75,10 +75,10 @@ router.post('/join', async(req, res, next)=>{
         let ans;
         if(nicks != null){
             console.log("join fail(same nick)");
-            res.status(200).send(3);
+            res.status(200).json(3);
         } else if(ids != null) {    //5. DB에 같은 아이디 있는 경우
             console.log("join fail(same id)");
-            res.status(200).send(2);
+            res.status(200).json(2);
         } else if(users == null) {
             //4. 없을 경우 DB에 값을 저장한다.
             const c = await User.create({
@@ -88,7 +88,7 @@ router.post('/join', async(req, res, next)=>{
                 class:0
             });
             console.log("join success");
-            res.status(200).send(1);
+            res.status(200).json(1);
         }
     } catch(err) {
         console.error(err);
