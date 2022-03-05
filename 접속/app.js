@@ -85,36 +85,40 @@ socket.on('message', function(msg, rinfo) {
     console.log(str);
 
     if (str.cmd == "GG") {
-        async() => {    
-            //여기서 멈춰버림...
-            const checkNick =  await User.findOne({
-                attributes: ['nick'],
-                where: {nick: str.nick}
-            });
-            console.log(pList[0]);
-            await pList.forEach(element => {
-                console.log(element.nick)
-                if(element.nick == checkNick)
-                {
-                    let updata = checkNick.update({
-                        pcHP: element.pcHP,
-                        Rz: element.Rz,
-                        Lx: element.Lx,
-                        Ly: element.Ly,
-                        Lz: element.Lz,
-                        lv: element.lv,
-                        pAtt: element.pAtt,
-                        pExp: element.pExp
-                    })
-                    pList.splice(element);
-                    console.log(updata);
-                }
-            });
-
-            pList.forEach(element => {
-                console.log(element);
-            });
-        }
+        User.findOne({
+            where: {nick: str.nick}
+        }).then(
+            result => {
+                if(result != null){
+                pList.forEach(element => {
+                    if(element.nick == result.nick)
+                    {
+                        result.update({
+                            pcHP: element.pcHP,
+                            Rz: element.Rz,
+                            Lx: element.Lx,
+                            Ly: element.Ly,
+                            Lz: element.Lz,
+                            lv: element.lv,
+                            pAtt: element.pAtt,
+                            pExp: element.pExp
+                        })
+                        .then(
+                            ()=>{
+                                pList.splice(element,1);
+                                
+                                const message = JSON.stringify({cmd:"GG"});
+                                socket.send(message, 0, message.length, rinfo.port, 
+                                function(err){                                        if(err){
+                                        return;
+                                    }
+                                })
+                            }
+                        )
+                    }
+                });
+            }}                
+        )
     }
 
     if (str.cmd == "CS") {
