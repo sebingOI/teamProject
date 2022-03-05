@@ -57,10 +57,6 @@ module.exports = class User extends Sequelize.Model {
 			pExp: {
 				type: Sequelize.INTEGER(30),
 				allowNull: true,
-      },
-      pAct: {
-        type: Sequelize.INTEGER,
-        allowNull: true
       }}, {
       sequelize,
       timestamps: false,
