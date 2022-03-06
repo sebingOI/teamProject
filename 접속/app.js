@@ -1,4 +1,5 @@
 const dgram = require('dgram');
+const e = require('express');
 const { sequelize, User } = require('./models');
 const socket = dgram.createSocket('udp4');
 const mList = [{ mID: 1, mcHP: 100, cLx: -2400, cLy: -9510, cLz: -111.6, cRz: 90, mAct: 101, mRT: 10000 },
@@ -14,9 +15,9 @@ const mList = [{ mID: 1, mcHP: 100, cLx: -2400, cLy: -9510, cLz: -111.6, cRz: 90
     { mID: 11, mcHP: 100, cLx: 1870, cLy: -250, cLz: 152, cRz: 150, Act: 101, mRT: 10000 },
     { mID: 21, mcHP: 500, cLx: -7210, cLy: -7360, cLz: -98, cRz: 100, mAct: 101, mRT: 30000 },
     { mID: 22, mcHP: 500, cLx: -8070, cLy: 680, cLz:  62, cRz: 30, mAct: 101, mRT: 30000 }];
-const pList = [{ nick: "kk", Lx: 453.2335, Ly: 441.21, Lz: 929.193, Rz: 50, cla: 1, pmHP: 100, pcHP: 100, lv: 1, pExp:9 },
-    { nick: "pd", Lx: 300.1232, Ly: 500.21, Lz: 700.193, Rz: 31.724, cla: 2, pmHP: 130, pcHP: 200, lv: 10, pExp:80 },
-    { nick: "jj", Lx: 490.1232, Ly: 442.21, Lz: 933.193, Rz: 50, cla: 3, pmHP: 100, pcHP: 100, lv: 1, pExp:9 }];
+const pList = [{ nick: "kk", Lx: 453.2335, Ly: 441.21, Lz: 929.193, Rz: 50, cla: 1, pmHP: 100, pcHP: 100, lv: 1, pExp:9, CNt: 0},
+    { nick: "pd", Lx: 300.1232, Ly: 500.21, Lz: 700.193, Rz: 31.724, cla: 2, pmHP: 130, pcHP: 200, lv: 10, pExp:80, CNt: 0},
+    { nick: "jj", Lx: 100, Ly: 100, Lz: 100, Rz: 50, cla: 3, pmHP: 100, pcHP: 100, lv: 1, pExp:9, CNt: 0 }];
 let cnt = 6;
     socket.bind(9000);
 
@@ -80,9 +81,73 @@ socket.on('listening', function() {
     console.log('listening event');
 });
 
+let logout_users = [];
+//비정상적 로그아웃 시간 측정
+let checkLogout = setInterval(() => {
+    pList.forEach(element => {
+        element.CNt++;
+        //console.log(element.CNt);
+        if(element.CNt >= 30 && pList.includes(element))
+        {
+            User.findOne({
+                where: {nick: element.nick}
+            }).then(
+                result => {
+                    if(result != null){
+                        if(element.nick == result.nick)
+                        {
+                            result.update({
+                                pcHP: element.pcHP,
+                                Rz: element.Rz,
+                                Lx: element.Lx,
+                                Ly: element.Ly,
+                                Lz: element.Lz,
+                                lv: element.lv,
+                                pAtt: element.pAtt,
+                                pExp: element.pExp
+                            })
+                            .then(
+                                ()=>{
+                                    logout_users.push(element);
+                                    pList.splice(element, 1);
+                                }
+                            )
+                        }
+                    }
+                }                
+            )
+        }
+    });
+}, 1000);
+
 socket.on('message', function(msg, rinfo) {
     let str = JSON.parse(msg.toString());
     console.log(str);
+
+    //비정상 로그아웃 부분
+    if(logout_users != null){
+        logout_users.forEach(element => {
+            if(str.nick == element.nick) {
+                logout_users.splice(element, 1);
+                const message = JSON.stringify({cmd:"GG"});
+                socket.send(message, 0, message.length, rinfo.port, 
+                function(err){
+                    if(err){
+                    return;
+                    }
+                })
+            }
+        });
+    }
+
+    if(str.cmd == "CN")
+    {
+        pList.forEach(element => {
+            if(element.nick == str.nick && element.CNt <= 30){
+                element.CNt = 0;
+            }
+        })
+    }
 
     if (str.cmd == "GG") {
         User.findOne({
@@ -128,7 +193,7 @@ socket.on('message', function(msg, rinfo) {
                 attributes: ['id', 'nick', 'Lx', 'Ly', 'Lz', 'Rz', 'cla', 'lv', 'pExp'],
                 where: { id: str.id }
             });
-            const message = JSON.stringify({cmd: "uDB", nick: csid.nick, Lx: csid.Lx, Ly: csid.Ly, Lz: csid.Lz, Ry: csid.Ry, cla: csid.cla, lv: csid.lv, pExp: csid.pExp })
+            const message = JSON.stringify({cmd: "uDB", nick: csid.nick, Lx: csid.Lx, Ly: csid.Ly, Lz: csid.Lz, Rz: csid.Rz, cla: csid.cla, lv: csid.lv, pExp: csid.pExp })
             console.log(message);
             //let udb = new Udb("uDB", csid.nick, csid.Lx, csid.Ly, csid.Lz, csid.Ry, csid.cla, csid.lv, csid.pExp, rinfo.Ipaddress, rinfo.port);
             socket.send(message, 0, message.length, rinfo.port, 

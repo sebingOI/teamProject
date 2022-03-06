@@ -26,7 +26,7 @@ module.exports = class User extends Sequelize.Model {
         type: Sequelize.INTEGER,  //Enum
         allowNull: true,
       },
-			Ry: {
+			Rz: {
         type: Sequelize.FLOAT,
         allowNull: true,
       },
