@@ -1,8 +1,7 @@
 const dgram = require('dgram');
-const e = require('express');
 const { sequelize, User } = require('./models');
 const socket = dgram.createSocket('udp4');
-const mList = [{ mID: 1, mcHP: 100, cLx: -2400, cLy: -9510, cLz: -111.6, cRz: 90, mAct: 101, mRT: 10000 },
+const marr = [{ mID: 1, mcHP: 100, cLx: -2400, cLy: -9510, cLz: -111.6, cRz: 90, mAct: 101, mRT: 10000 },
     { mID: 2, mcHP: 100, cLx: -3580, cLy: -9660, cLz: -168, cRz: 50, mAct: 101, mRT: 10000 },
     { mID: 3, mcHP: 100, cLx: -3160, cLy: -8680, cLz: -168, cRz: 140, mAct: 101, mRT: 10000 },
     { mID: 4, mcHP: 100, cLx: -1960, cLy: -8390, cLz: -168, mAct: 101, mRT: 10000 },
@@ -15,60 +14,60 @@ const mList = [{ mID: 1, mcHP: 100, cLx: -2400, cLy: -9510, cLz: -111.6, cRz: 90
     { mID: 11, mcHP: 100, cLx: 1870, cLy: -250, cLz: 152, cRz: 150, Act: 101, mRT: 10000 },
     { mID: 21, mcHP: 500, cLx: -7210, cLy: -7360, cLz: -98, cRz: 100, mAct: 101, mRT: 30000 },
     { mID: 22, mcHP: 500, cLx: -8070, cLy: 680, cLz:  62, cRz: 30, mAct: 101, mRT: 30000 }];
-const pList = [{ nick: "kk", Lx: 200, Ly: 200, Lz: 200, Rz: 200, cla: 1, pmHP: 100, pcHP: 100, lv: 1, pExp:9, CNt: 0},
+    const pList = [{ nick: "kk", Lx: 200, Ly: 200, Lz: 200, Rz: 200, cla: 1, pmHP: 100, pcHP: 100, lv: 1, pExp:9, CNt: 0},
     { nick: "pd", Lx: 300.1232, Ly: 500.21, Lz: 700.193, Rz: 31.724, cla: 2, pmHP: 130, pcHP: 200, lv: 10, pExp:80, CNt: 0},
     { nick: "jj", Lx: 100, Ly: 100, Lz: 100, Rz: 50, cla: 3, pmHP: 100, pcHP: 100, lv: 1, pExp:9, CNt: 0 }];
 let cnt = 6;
     socket.bind(9000);
 
-// function Cs(cmd, id, Ipaddress, port) {
-//     this.cmd = cmd;
-//     this.id = id;
-//     this.Ipaddress = Ipaddress;
-//     this.port = port;
-// }
+function Cs(cmd, id, Ipaddress, port) {
+    this.cmd = cmd;
+    this.id = id;
+    this.Ipaddress = Ipaddress;
+    this.port = port;
+}
 
-// function Udb(cmd, nick, Lx, Ly, Lz, Ry, cla, lv, pExp, Ipaddress, port) {
-//     this.cmd = cmd;
-//     this.nick = nick;
-//     this.Lx = Lx;
-//     this.Ly = Ly;
-//     this.Lz = Lz;
-//     this.Ry = Ry;
-//     this.cla = cla;
-//     this.lv = lv;
-//     this.pExp = pExp;
-//     this.Ipaddress = Ipaddress;
-//     this.port = port;
-// }
+function Udb(cmd, nick, Lx, Ly, Lz, Rz, cla, lv, pExp, Ipaddress, port) {
+    this.cmd = cmd;
+    this.nick = nick;
+    this.Lx = Lx;
+    this.Ly = Ly;
+    this.Lz = Lz;
+    this.Rz = Rz;
+    this.cla = cla;
+    this.lv = lv;
+    this.pExp = pExp;
+    this.Ipaddress = Ipaddress;
+    this.port = port;
+}
 
-// function CLS(cmd, nick, Lx, Ly, Lz, Ry, cla, lv, pExp, Ipaddress, port) {
-//     this.cmd = cmd;
-//     this.nick = nick;
-//     this.Lx = Lx;
-//     this.Ly = Ly;
-//     this.Lz = Lz;
-//     this.Ry = Ry;
-//     this.cla = cla;
-//     this.lv = lv;
-//     this.pExp = pExp;
-//     this.Ipaddress = Ipaddress;
-//     this.port = port;
-// }
+function CLS(cmd, nick, Lx, Ly, Lz, Rz, cla, lv, pExp, Ipaddress, port) {
+    this.cmd = cmd;
+    this.nick = nick;
+    this.Lx = Lx;
+    this.Ly = Ly;
+    this.Lz = Lz;
+    this.Rz = Rz;
+    this.cla = cla;
+    this.lv = lv;
+    this.pExp = pExp;
+    this.Ipaddress = Ipaddress;
+    this.port = port;
+}
 
-// function MAS(cmd, mID, mcHP, cLx, cLy, cLz, cRz, mAct, mRT, Ipaddress, port) {
-//     this.cmd = cmd;
-//     this.mID = mID;
-//     this.mcHP = mcHP;
-//     this.cLx = cLx;
-//     this.cLy = cLy;
-//     this.cLz = cLz;
-//     this.cRz = cRz;
-//     this.mRT = mRT;
-//     this.mAct = mAct;
-//     this.Ipaddress = Ipaddress;
-//     this.port = port;
-// }
+function MAS(cmd, mID, mcHP, cLx, cLy, cLz, cRz, mAct, mRT, Ipaddress, port) {
+    this.cmd = cmd;
+    this.mID = mID;
+    this.mcHP = mcHP;
+    this.cLx = cLx;
+    this.cLy = cLy;
+    this.cLz = cLz;
+    this.cRz = cRz;
+    this.mRT = mRT;
+    this.mAct = mAct;
+    this.Ipaddress = Ipaddress;
+    this.port = port;
+}
 sequelize.sync()
     .then(() => {
         console.log("DB 연결 성공");
@@ -81,12 +80,10 @@ socket.on('listening', function() {
     console.log('listening event');
 });
 
-
-
 let logout_users = [];
 //비정상적 로그아웃 시간 측정
 let checkLogout = setInterval(() => {
-    //console.log(pList);
+    console.log(pList);
     pList.forEach(element => {
         element.CNt++;
         //console.log(element.CNt);
@@ -126,28 +123,12 @@ let checkLogout = setInterval(() => {
     });
 }, 1000);
 
-
+let str;
 
 socket.on('message', function(msg, rinfo) {
-    let str = JSON.parse(msg.toString());
+    str = JSON.parse(msg.toString());
     console.log(str);
 
-    //비정상 로그아웃 부분
-    // if(logout_users != null){
-        // logout_users.forEach(element => {
-        //     if(str.nick == element.nick) {
-        //         logout_users.splice(element, 1);
-        //         const message = JSON.stringify({cmd:"GG"});
-        //         socket.send(message, 0, message.length, rinfo.port, 
-        //         function(err){
-        //             if(err){
-        //             return;
-        //             }
-        //         })
-        //     }
-        // });
-    // }
-    
     if(str.cmd == "CN")
     {
         pList.forEach(element => {
@@ -200,26 +181,76 @@ socket.on('message', function(msg, rinfo) {
             const csid = User.findOne({
                 attributes: ['id', 'nick', 'Lx', 'Ly', 'Lz', 'Rz', 'cla', 'lv', 'pExp'],
                 where: { id: str.id }
-            });
-            const message = JSON.stringify({cmd: "uDB", nick: csid.nick, Lx: csid.Lx, Ly: csid.Ly, Lz: csid.Lz, Rz: csid.Rz, cla: csid.cla, lv: csid.lv, pExp: csid.pExp })
-            console.log(message);
-            //let udb = new Udb("uDB", csid.nick, csid.Lx, csid.Ly, csid.Lz, csid.Ry, csid.cla, csid.lv, csid.pExp, rinfo.Ipaddress, rinfo.port);
-            socket.send(message, 0, message.length, rinfo.port, 
-                function(err) {
-                    if (err) {
-                        //console.log('메세지 전송 실패');
-                        return;
+            })
+            .then(result => {
+                if (result.cla == 0) {
+                    try {
+                        // 배열 전체 보내야함
+                        const cc = JSON.stringify({cmd: "CC", id: str.id, cla: result.cla })
+                        //let cls = new CLS("cLs", pList, rinfo.Ipaddress, rinfo.port);
+                        socket.send(cc, 0, cc.length, rinfo.port, rinfo.Ipaddress, 
+                            function(err) {
+                                if (err) {
+                                    console.log('메세지 전송 실패');    
+                                }
+                            }
+                        );
+                        console.log('메세지 전송 성공');
+                    } catch (err) {
+                        console.error(err);
                     }
                 }
-            );
-            //console.log('메세지 전송 성공');
+            })
         } catch (err) {
             console.error(err);
         }
     } 
 
+    if (str.cmd == 'CC') {
+        try {
+            const csid = User.findOne({
+                attributes: ['id', 'nick', 'Lx', 'Ly', 'Lz', 'Rz', 'cla', 'lv', 'pExp'],
+                where: { id: str.id }
+            })
+            .then(result => {
+                //console.log(result.id);
+                result.update({
+                    pcHP: str.pmHP,
+                    pmHP: str.pmHP,
+                    cla: str.cla,
+                    pAtt: str.pAtt
+                })
+                if (result.cla != 0) {
+                    try {
+                        let message = JSON.stringify({cmd: "uDB", nick: result.nick, Lx: result.Lx, Ly: result.Ly, Lz: result.Lz, Rz: result.Rz, cla: result.cla, lv: result.lv, pExp: result.pExp })
+                        let sendMsg = JSON.stringify({Buffer: message.length, cmd: "uDB", nick: result.nick, Lx: result.Lx, Ly: result.Ly, Lz: result.Lz, Rz: result.Rz, cla: result.cla, lv: result.lv, pExp: result.pExp })
+                        //console.log(sendMsg);
+                        let udb = new Udb("uDB", result.nick, result.Lx, result.Ly, result.Lz, result.Rz, result.cla, result.lv, result.pExp, rinfo.Ipaddress, rinfo.port);
+                        socket.send(sendMsg, 0, sendMsg.length, udb.port, 
+                            function(err) {
+                                if (err) {
+                                    //console.log('메세지 전송 실패');
+                                    return;
+                                }
+                            }
+                        );
+                    } catch (err) {
+                        console.error(err);
+                    }
+                }
+            })
+            // .then(result1 => {
+            //     console.log(result1)
+                
+            // });
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     let cscnt = setInterval(() => {
         //1초마다 카운트를 하겠다.
+        cnt--;
         if(cnt <= 1)
             clearInterval(cscnt);
     }, 1000);
@@ -230,7 +261,7 @@ socket.on('message', function(msg, rinfo) {
         try {
             // 배열 전체 보내야함
             const ms = JSON.stringify({cmd: "cLs", pList: pList })
-            //let cls = new CLS("cLs", charr, rinfo.Ipaddress, rinfo.port);
+            let cls = new CLS("cLs", pList, rinfo.Ipaddress, rinfo.port);
             socket.send(ms, 0, ms.length, rinfo.port, rinfo.Ipaddress, 
                 function(err) {
                     if (err) {
@@ -238,25 +269,20 @@ socket.on('message', function(msg, rinfo) {
                     }
                 }
             );
-            //console.log('메세지 전송 성공');
         } catch (err) {
             console.error(err);
         }
-    } else {
-        //console.log("참여자 배열 로그아웃 처리");
-    }
+    } 
     let clcnt = setInterval(() => {
         if(cnt <= 1)
             clearInterval(clcnt);
     }, 1000);
-
     if (str.cmd == "cLo" && cnt > 0) {
         clearTimeout(clcnt);
         cnt = 6;
         try {
-            // 배열 전체 보내야함
-            const message = JSON.stringify({cmd: "mAs", mList: mList})
-            //let mas = new MAS("mAs", marr, rinfo.Ipaddress, rinfo.port);
+            const message = JSON.stringify({cmd: "mAs", marr: marr})
+            let mas = new MAS("mAs", marr, rinfo.Ipaddress, rinfo.port);
             socket.send(message, 0, message.length, rinfo.port, rinfo.Ipaddress,
                 function(err) {
                     if (err) {
@@ -269,11 +295,13 @@ socket.on('message', function(msg, rinfo) {
         } catch (err) {
             console.error(err);
         }
-     }  else {
-        //console.log("몬스터 배열 로그아웃 처리");
-    }
+     } 
     if (str.cmd == "mAo" && cnt > 0) {
-        clearTimeout(clcnt);
-        cnt = 6;
-     }
+        try {
+            clearTimeout(clcnt);
+            cnt = 6;
+        } catch (err) {
+            console.error(err);
+        }
+    } 
 });
