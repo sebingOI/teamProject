@@ -27,6 +27,14 @@ function Cs(cmd, id, Ipaddress, port) {
     this.port = port;
 }
 
+function CC(cmd, id, cla, Ipaddress, port) {
+    this.cmd = cmd;
+    this.id = id;
+    this.cla = cla;
+    this.Ipaddress = Ipaddress;
+    this.port = port;
+}
+
 function Udb(cmd, nick, Lx, Ly, Lz, Rz, cla, lv, pExp, Ipaddress, port) {
     this.cmd = cmd;
     this.nick = nick;
@@ -83,7 +91,7 @@ socket.on('listening', function() {
 let logout_users = [];
 //비정상적 로그아웃 시간 측정
 let checkLogout = setInterval(() => {
-    console.log(pList);
+    console.log(pList[0].CNt);
     pList.forEach(element => {
         element.CNt++;
         //console.log(element.CNt);
@@ -186,9 +194,9 @@ socket.on('message', function(msg, rinfo) {
                 if (result.cla == 0) {
                     try {
                         // 배열 전체 보내야함
-                        const cc = JSON.stringify({cmd: "CC", id: str.id, cla: result.cla })
-                        //let cls = new CLS("cLs", pList, rinfo.Ipaddress, rinfo.port);
-                        socket.send(cc, 0, cc.length, rinfo.port, rinfo.Ipaddress, 
+                        let message = JSON.stringify({cmd: "CC", id: str.id, cla: result.cla })
+                        let sendMsg = JSON.stringify({Buffer: message.length,cmd: "CC", id: str.id, cla: result.cla})
+                        socket.send(sendMsg, 0, sendMsg.length, rinfo.port, rinfo.Ipaddress, 
                             function(err) {
                                 if (err) {
                                     console.log('메세지 전송 실패');    
@@ -196,6 +204,25 @@ socket.on('message', function(msg, rinfo) {
                             }
                         );
                         console.log('메세지 전송 성공');
+                    } catch (err) {
+                        console.error(err);
+                    }
+                }
+                else if(result.cla != 0)
+                {
+                    try {
+                        let message = JSON.stringify({cmd: "uDB", nick: result.nick, Lx: result.Lx, Ly: result.Ly, Lz: result.Lz, Rz: result.Rz, cla: result.cla, lv: result.lv, pExp: result.pExp })
+                        let sendMsg = JSON.stringify({Buffer: message.length, cmd: "uDB", nick: result.nick, Lx: result.Lx, Ly: result.Ly, Lz: result.Lz, Rz: result.Rz, cla: result.cla, lv: result.lv, pExp: result.pExp })
+                            //console.log(sendMsg);
+                        let udb = new Udb("uDB", result.nick, result.Lx, result.Ly, result.Lz, result.Rz, result.cla, result.lv, result.pExp, rinfo.Ipaddress, rinfo.port);
+                        socket.send(sendMsg, 0, sendMsg.length, udb.port, 
+                            function(err) {
+                                if (err) {
+                                    //console.log('메세지 전송 실패');
+                                    return;
+                                }
+                            }
+                        );
                     } catch (err) {
                         console.error(err);
                     }
@@ -220,23 +247,22 @@ socket.on('message', function(msg, rinfo) {
                     cla: str.cla,
                     pAtt: str.pAtt
                 })
-                if (result.cla != 0) {
-                    try {
-                        let message = JSON.stringify({cmd: "uDB", nick: result.nick, Lx: result.Lx, Ly: result.Ly, Lz: result.Lz, Rz: result.Rz, cla: result.cla, lv: result.lv, pExp: result.pExp })
-                        let sendMsg = JSON.stringify({Buffer: message.length, cmd: "uDB", nick: result.nick, Lx: result.Lx, Ly: result.Ly, Lz: result.Lz, Rz: result.Rz, cla: result.cla, lv: result.lv, pExp: result.pExp })
+                
+                try {
+                    let message = JSON.stringify({cmd: "uDB", nick: result.nick, Lx: result.Lx, Ly: result.Ly, Lz: result.Lz, Rz: result.Rz, cla: result.cla, lv: result.lv, pExp: result.pExp })
+                    let sendMsg = JSON.stringify({Buffer: message.length, cmd: "uDB", nick: result.nick, Lx: result.Lx, Ly: result.Ly, Lz: result.Lz, Rz: result.Rz, cla: result.cla, lv: result.lv, pExp: result.pExp })
                         //console.log(sendMsg);
-                        let udb = new Udb("uDB", result.nick, result.Lx, result.Ly, result.Lz, result.Rz, result.cla, result.lv, result.pExp, rinfo.Ipaddress, rinfo.port);
-                        socket.send(sendMsg, 0, sendMsg.length, udb.port, 
-                            function(err) {
-                                if (err) {
-                                    //console.log('메세지 전송 실패');
-                                    return;
-                                }
+                    let udb = new Udb("uDB", result.nick, result.Lx, result.Ly, result.Lz, result.Rz, result.cla, result.lv, result.pExp, rinfo.Ipaddress, rinfo.port);
+                    socket.send(sendMsg, 0, sendMsg.length, udb.port, 
+                        function(err) {
+                            if (err) {
+                                //console.log('메세지 전송 실패');
+                                return;
                             }
-                        );
-                    } catch (err) {
-                        console.error(err);
-                    }
+                        }
+                    );
+                } catch (err) {
+                    console.error(err);
                 }
             })
             // .then(result1 => {
@@ -260,9 +286,11 @@ socket.on('message', function(msg, rinfo) {
         cnt = 6;
         try {
             // 배열 전체 보내야함
-            const ms = JSON.stringify({cmd: "cLs", pList: pList })
-            let cls = new CLS("cLs", pList, rinfo.Ipaddress, rinfo.port);
-            socket.send(ms, 0, ms.length, rinfo.port, rinfo.Ipaddress, 
+            //const ms = JSON.stringify({cmd: "cLs", pList: pList })
+            let message = JSON.stringify({cmd: "cLs", pList: pList })
+            let sendMsg = JSON.stringify({Buffer: message.length,cmd: "cLs", pList: pList})
+            //let cls = new CLS("cLs", pList, rinfo.Ipaddress, rinfo.port);
+            socket.send(sendMsg, 0, sendMsg.length, rinfo.port, rinfo.Ipaddress, 
                 function(err) {
                     if (err) {
                         console.log('메세지 전송 실패');    
@@ -281,9 +309,10 @@ socket.on('message', function(msg, rinfo) {
         clearTimeout(clcnt);
         cnt = 6;
         try {
-            const message = JSON.stringify({cmd: "mAs", marr: marr})
-            let mas = new MAS("mAs", marr, rinfo.Ipaddress, rinfo.port);
-            socket.send(message, 0, message.length, rinfo.port, rinfo.Ipaddress,
+            let message = JSON.stringify({cmd: "mAs", marr: marr })
+            let sendMsg = JSON.stringify({Buffer: message.length,cmd: "mAs", marr: marr})
+            //let mas = new MAS("mAs", marr, rinfo.Ipaddress, rinfo.port);
+            socket.send(sendMsg, 0, sendMsg.length, rinfo.port, rinfo.Ipaddress,
                 function(err) {
                     if (err) {
                         console.log('메세지 전송 실패');
