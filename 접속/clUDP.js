@@ -1,20 +1,35 @@
 var PORT = 9000;
 var HOST = '127.0.0.1';
 var dgram = require('dgram');
-var CS = JSON.stringify({ cmd: "CS", id: "asdf" });
-var DBS = JSON.stringify({ cmd: "DBs", nick: "kk" })
-var CLO = JSON.stringify({ cmd: "cLo", nick: "kk" })
+var CS = JSON.stringify({ cmd: "CS", id: "gj1" });
+var DBS = JSON.stringify({ cmd: "DBs", nick: "221" })
+var CLO = JSON.stringify({ cmd: "cLo", nick: "221" })
 var MAO = JSON.stringify({ cmd: "mAo", mID: "11" })
 var CC = JSON.stringify({cmd: "CC", id: "gj1", cla: 1, pAtt: 1, pmHP: 10});
+var CN = JSON.stringify({ cmd: "CN", nick: "221", CNt: 20});
 
 var client = dgram.createSocket('udp4');
-client.send(CC, 0, CC.length, PORT, HOST, function(err, bytes) {
+client.send(CS, 0, CS.length, PORT, HOST, function(err, bytes) {
     if (err) throw err;
     console.log('UDP message send to' + HOST +':'+ PORT);
 });
 
+setInterval(()=>{
+    client.send(CN, 0, CN.length, PORT, HOST, function(err, bytes) {
+        if (err) throw err;
+        console.log('UDP message send to' + HOST +':'+ PORT);
+    });
+}, 20000);
+
 client.on('message',function(msg,rinfo){
     console.log(JSON.parse(msg.toString()));
+    const ccin = JSON.parse(msg.toString())
+    if (ccin.cmd == 'CC') {
+        client.send(CC, 0, CC.length, PORT, HOST, function(err, bytes) {
+            if (err) throw err;
+            console.log('UDP message send to' + HOST + ":" + PORT);
+        });
+    }
     const udbin = JSON.parse(msg.toString())
     if (udbin.cmd == 'uDB') {
         client.send(DBS, 0, DBS.length, PORT, HOST, function(err, bytes) {
