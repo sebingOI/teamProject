@@ -1,55 +1,75 @@
 var PORT = 9000;
 var HOST = '127.0.0.1';
 var dgram = require('dgram');
-var CS = JSON.stringify({ cmd: "CS", id: "gj1" });
-var DBS = JSON.stringify({ cmd: "DBs", nick: "221" })
-var CLO = JSON.stringify({ cmd: "cLo", nick: "221" })
+var CS = JSON.stringify({ cmd: "CS", id: "acc" });
+var DBS = JSON.stringify({ cmd: "DBs", nick: "kk" })
+var CLO = JSON.stringify({ cmd: "cLo", nick: "kk" })
 var MAO = JSON.stringify({ cmd: "mAo", mID: "11" })
-var CC = JSON.stringify({cmd: "CC", id: "gj1", cla: 1, pAtt: 1, pmHP: 10});
-var CN = JSON.stringify({ cmd: "CN", nick: "221", CNt: 20});
+var CC = JSON.stringify({cmd: "CC", id: "acc", cla: 1, pAtt: 1, pmHP: 10});
+var CN = JSON.stringify({ cmd: "CN", nick: "kk", CNt: 20});
+var MOVE = JSON.stringify({ cmd: "move", nick: "kk", Lx: 441.45, Ly: 456.7845, Lz: 930.156, Rz:122, act: 61});
 
 var client = dgram.createSocket('udp4');
-client.send(CS, 0, CS.length, PORT, HOST, function(err, bytes) {
+
+client.send(CN, 0, CN.length, PORT, HOST, function(err, bytes) {
     if (err) throw err;
-    console.log('UDP message send to' + HOST +':'+ PORT);
+    console.log('UDP message send to ' + HOST +':'+ PORT);
 });
 
 setInterval(()=>{
     client.send(CN, 0, CN.length, PORT, HOST, function(err, bytes) {
         if (err) throw err;
-        console.log('UDP message send to' + HOST +':'+ PORT);
+        console.log('UDP message send to ' + HOST +':'+ PORT);
     });
 }, 20000);
 
+client.send(CS, 0, CS.length, PORT, HOST, function(err, bytes) {
+    if (err) throw err;
+    console.log('UDP message send to ' + HOST +':'+ PORT);
+});
+
+setTimeout(()=>{
+    client.send(MOVE, 0, MOVE.length, PORT, HOST, function(err, bytes) {
+        if (err) throw err;
+        console.log('UDP message send to ' + HOST +':'+ PORT);
+    });
+}, 1000)
+
+
 client.on('message',function(msg,rinfo){
-    console.log(JSON.parse(msg.toString()));
-    const ccin = JSON.parse(msg.toString())
-    if (ccin.cmd == 'CC') {
+    //console.log(JSON.parse(msg.toString()));
+    const msgIN = JSON.parse(msg.toString())
+    if (msgIN.cmd == 'CC') {
         client.send(CC, 0, CC.length, PORT, HOST, function(err, bytes) {
             if (err) throw err;
-            console.log('UDP message send to' + HOST + ":" + PORT);
+            //console.log('UDP message send to' + HOST + ":" + PORT);
         });
     }
-    const udbin = JSON.parse(msg.toString())
-    if (udbin.cmd == 'uDB') {
+    //const udbin = JSON.parse(msg.toString())
+    if (msgIN.cmd == 'uDB') {
         client.send(DBS, 0, DBS.length, PORT, HOST, function(err, bytes) {
             if (err) throw err;
-            console.log('UDP message send to' + HOST + ":" + PORT);
+            //console.log('UDP message send to' + HOST + ":" + PORT);
         });
     }
-    const cloin = JSON.parse(msg.toString());
-    if (cloin.cmd == "cLs") {
+    //const cloin = JSON.parse(msg.toString());
+    if (msgIN.cmd == "cLs") {
         client.send(CLO, 0, CLO.length, PORT, HOST, function(err, bytes) {
             if (err) throw err;
-            console.log('UDP message send to' + HOST + ":" + PORT);
+            //console.log('UDP message send to' + HOST + ":" + PORT);
         });
     }
-    const maoin = JSON.parse(msg.toString());
-    if (maoin.cmd == "mAs") {
+    //const maoin = JSON.parse(msg.toString());
+    if (msgIN.cmd == "mAs") {
         client.send(MAO, 0, MAO.length, PORT, HOST, function(err, bytes) {
             if (err) throw err;
-            console.log('UDP message send to' + HOST + ":" + PORT);
+            //console.log('UDP message send to' + HOST + ":" + PORT);
         });
+    }
+
+    if(msgIN.cmd == "move")
+    {
+        console.log(msgIN);
     }
 });
 

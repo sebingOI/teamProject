@@ -14,9 +14,9 @@ const marr = [{ mID: 1, mcHP: 100, cLx: -2400, cLy: -9510, cLz: -111.6, cRz: 90,
     { mID: 11, mcHP: 100, cLx: 1870, cLy: -250, cLz: 152, cRz: 150, Act: 101, mRT: 10000 },
     { mID: 21, mcHP: 500, cLx: -7210, cLy: -7360, cLz: -98, cRz: 100, mAct: 101, mRT: 30000 },
     { mID: 22, mcHP: 500, cLx: -8070, cLy: 680, cLz:  62, cRz: 30, mAct: 101, mRT: 30000 }];
-    const pList = [{ nick: "kk", Lx: 200, Ly: 200, Lz: 200, Rz: 200, cla: 1, pmHP: 100, pcHP: 100, lv: 1, pExp:9, CNt: 0},
-    { nick: "pd", Lx: 300.1232, Ly: 500.21, Lz: 700.193, Rz: 31.724, cla: 2, pmHP: 130, pcHP: 200, lv: 10, pExp:80, CNt: 0},
-    { nick: "jj", Lx: 100, Ly: 100, Lz: 100, Rz: 50, cla: 3, pmHP: 100, pcHP: 100, lv: 1, pExp:9, CNt: 0 }];
+    const pList = [{ nick: "kk", Lx: 200, Ly: 200, Lz: 200, Rz: 200, cla: 1, pmHP: 100, pcHP: 100, lv: 1, pExp:9, act: 62, CNt: 0, ip: null, port: null},
+    { nick: "pd", Lx: 300.1232, Ly: 500.21, Lz: 700.193, Rz: 31.724, cla: 2, pmHP: 130, pcHP: 200, lv: 10, pExp:80, act: 62, CNt: 0, ip: null, port: null},
+    { nick: "jj", Lx: 100, Ly: 100, Lz: 100, Rz: 50, cla: 3, pmHP: 100, pcHP: 100, lv: 1, pExp:9, act: 62, CNt: 0 ,ip: null, port: null}];
 let cnt = 6;
     socket.bind(9000);
 
@@ -91,7 +91,7 @@ socket.on('listening', function() {
 let logout_users = [];
 //비정상적 로그아웃 시간 측정
 let checkLogout = setInterval(() => {
-    console.log(pList[0].CNt);
+    console.log(pList[0]);
     pList.forEach(element => {
         element.CNt++;
         //console.log(element.CNt);
@@ -191,6 +191,14 @@ socket.on('message', function(msg, rinfo) {
                 where: { id: str.id }
             })
             .then(result => {
+                //접속 시 유저 객체에 ip주소와 port번호 저장
+                pList.forEach(e=>{
+                    if(result.id == str.id)
+                    {
+                        e.ip = rinfo.address;
+                        e.port = rinfo.port;
+                    }
+                })
                 if (result.cla == 0) {
                     try {
                         // 배열 전체 보내야함
@@ -272,6 +280,39 @@ socket.on('message', function(msg, rinfo) {
         } catch (err) {
             console.error(err);
         }
+    }
+
+    if(str.cmd == "move")
+    {
+        pList.forEach(element => {
+            if(element.nick == str.nick){
+                element.Lx = str.Lx;
+                element.Ly = str.Ly;
+                element.Lz = str.Lz;
+                element.Rz = str.Rz;
+                element.act = str.act;
+                try{
+                    let message = JSON.stringify({cmd: "move", nick: element.nick, Lx: element.Lx, Ly: element.Ly, Lz: element.Lz, Rz: element.Rz, act: element.act})
+                    let sendMsg = JSON.stringify({Buffer: message.length, cmd: "move", nick: element.nick, Lx: element.Lx, Ly: element.Ly, Lz: element.Lz, Rz: element.Rz, act: element.act})
+                    //console.log(rinfo.port, ' ', rinfo.address);
+                    pList.forEach(e=>{
+                        if(e.nick == str.nick)
+                        {
+                            socket.send(sendMsg, 0, sendMsg.length, e.port, e.ip, 
+                                function(err) {
+                                    if (err) {
+                                        //console.log('메세지 전송 실패');
+                                        return;
+                                    }
+                                }
+                            )
+                        }
+                    })
+                } catch(err) {
+                    console.error(err);
+                }
+            }
+        })
     }
 
     let cscnt = setInterval(() => {
