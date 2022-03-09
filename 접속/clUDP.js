@@ -4,10 +4,12 @@ var dgram = require('dgram');
 var CS = JSON.stringify({ cmd: "CS", id: "acc" });
 var DBS = JSON.stringify({ cmd: "DBs", nick: "kk" })
 var CLO = JSON.stringify({ cmd: "cLo", nick: "kk" })
-var MAO = JSON.stringify({ cmd: "mAo", mID: "11" })
+var MAO = JSON.stringify({ cmd: "mAo", mID: 11 })
 var CC = JSON.stringify({cmd: "CC", id: "acc", cla: 1, pAtt: 1, pmHP: 10});
 var CN = JSON.stringify({ cmd: "CN", nick: "kk", CNt: 20});
 var MOVE = JSON.stringify({ cmd: "move", nick: "kk", Lx: 441.45, Ly: 456.7845, Lz: 930.156, Rz:122, act: 61});
+var mAtt = JSON.stringify({ cmd: "mAtt", mID: 12, act: 92, nick:"kk" })
+var PD = JSON.stringify({ cmd: "PD", nick:"kk", pcHP: 50, mID: 2})
 
 var client = dgram.createSocket('udp4');
 
@@ -35,6 +37,12 @@ setTimeout(()=>{
     });
 }, 1000)
 
+setTimeout(()=>{
+    client.send(mAtt, 0, mAtt.length, PORT, HOST, function(err, bytes) {
+        if (err) throw err;
+        console.log('UDP message send to ' + HOST +':'+ PORT);
+    });
+}, 1000);
 
 client.on('message',function(msg,rinfo){
     //console.log(JSON.parse(msg.toString()));
@@ -70,6 +78,19 @@ client.on('message',function(msg,rinfo){
     if(msgIN.cmd == "move")
     {
         console.log(msgIN);
+    }
+
+    if(msgIN.cmd == "mAtt")
+    {
+        console.log(msgIN)
+        client.send(PD, 0, PD.length, PORT, HOST, function(err, bytes) {
+            if (err) throw err;
+            //console.log('UDP message send to' + HOST + ":" + PORT);
+        });
+    }
+
+    if(msgIN.cmd == "PD"){
+        console.log(msgIN)
     }
 });
 
