@@ -2,19 +2,19 @@ const dgram = require('dgram');
 const { sequelize, User } = require('./models');
 const { update } = require('./models/user');
 const socket = dgram.createSocket('udp4');
-const mList = [{ mID: 1, mcHP: 100, cLx: -2400, cLy: -9510, cLz: -111.6, cRz: 90, mAct: 101, mRT: 10000,mAtt:10 },
-    { mID: 2, mcHP: 100, cLx: -3580, cLy: -9660, cLz: -168, cRz: 50, mAct: 101, mRT: 10000,mAtt:10  },
-    { mID: 3, mcHP: 100, cLx: -3160, cLy: -8680, cLz: -168, cRz: 140, mAct: 101, mRT: 10000,mAtt:10  },
-    { mID: 4, mcHP: 100, cLx: -1960, cLy: -8390, cLz: -168, mAct: 101, mRT: 10000,mAtt:10  },
-    { mID: 5, mcHP: 100, cLx: -890, cLy: -7140, cLz: 72, cRz: 110, mAct: 101, mRT: 10000,mAtt:10  },
-    { mID: 6, mcHP: 100, cLx: 2340, cLy: -5660, cLz: -8, cRz: 40, mAct: 101, mRT: 10000,mAtt:10  },
-    { mID: 7, mcHP: 100, cLx: 310, cLy: -5610, cLz: 42, cRz: 0, mAct: 101, mRT: 10000,mAtt:10  },
-    { mID: 8, mcHP: 100, cLx: 240, cLy: -3480, cLz: 202, cRz: 190, mAct: 101, mRT: 10000,mAtt:10  },
-    { mID: 9, mcHP: 100, cLx: 2630, cLy: -4340, cLz: -28, cRz: 100, mAct: 101, mRT: 10000,mAtt:10  },
-    { mID: 10, mcHP: 100, cLx: 1640, cLy: -1690, cLz: -98, cRz: 230, mAct: 10, mRT: 10000,mAtt:10  },
-    { mID: 11, mcHP: 100, cLx: 1870, cLy: -250, cLz: 152, cRz: 150, Act: 101, mRT: 10000,mAtt:10  },
-    { mID: 21, mcHP: 500, cLx: -7210, cLy: -7360, cLz: -98, cRz: 100, mAct: 101, mRT: 30000,mAtt:25 },
-    { mID: 22, mcHP: 500, cLx: -8070, cLy: 680, cLz:  62, cRz: 30, mAct: 101, mRT: 30000,mAtt:25 }];
+const mList = [{ mID: 1, mcHP: 100, cLx: -2400, cLy: -9510, cLz: -111.6, cRz: 90, mAct: 101, mRT: 10000,mAtt:10,mExp: 3 },
+    { mID: 2, mcHP: 100, cLx: -3580, cLy: -9660, cLz: -168, cRz: 50, mAct: 101, mRT: 10000,mAtt:10,mExp: 3  },
+    { mID: 3, mcHP: 100, cLx: -3160, cLy: -8680, cLz: -168, cRz: 140, mAct: 101, mRT: 10000,mAtt:10,mExp: 3  },
+    { mID: 4, mcHP: 100, cLx: -1960, cLy: -8390, cLz: -168, mAct: 101, mRT: 10000,mAtt:10,mExp: 3  },
+    { mID: 5, mcHP: 100, cLx: -890, cLy: -7140, cLz: 72, cRz: 110, mAct: 101, mRT: 10000,mAtt:10,mExp: 3  },
+    { mID: 6, mcHP: 100, cLx: 2340, cLy: -5660, cLz: -8, cRz: 40, mAct: 101, mRT: 10000,mAtt:10,mExp: 3  },
+    { mID: 7, mcHP: 100, cLx: 310, cLy: -5610, cLz: 42, cRz: 0, mAct: 101, mRT: 10000,mAtt:10,mExp: 3  },
+    { mID: 8, mcHP: 100, cLx: 240, cLy: -3480, cLz: 202, cRz: 190, mAct: 101, mRT: 10000,mAtt:10,mExp: 3  },
+    { mID: 9, mcHP: 100, cLx: 2630, cLy: -4340, cLz: -28, cRz: 100, mAct: 101, mRT: 10000,mAtt:10,mExp: 3  },
+    { mID: 10, mcHP: 100, cLx: 1640, cLy: -1690, cLz: -98, cRz: 230, mAct: 10, mRT: 10000,mAtt:10,mExp: 3  },
+    { mID: 11, mcHP: 100, cLx: 1870, cLy: -250, cLz: 152, cRz: 150, Act: 101, mRT: 10000,mAtt:10,mExp: 3  },
+    { mID: 21, mcHP: 500, cLx: -7210, cLy: -7360, cLz: -98, cRz: 100, mAct: 101, mRT: 30000,mAtt:25,mExp: 30 },
+    { mID: 22, mcHP: 500, cLx: -8070, cLy: 680, cLz:  62, cRz: 30, mAct: 101, mRT: 30000,mAtt:25,mExp: 30 }];
     const pList = [{ nick: "kk", Lx: 200, Ly: 200, Lz: 200, Rz: 200, cla: 1, pmHP: 100, pcHP: 100, lv: 1, pExp:9, act: 62, CNt: 0, ip: null, port: null},
     { nick: "pd", Lx: 300.1232, Ly: 500.21, Lz: 700.193, Rz: 31.724, cla: 2, pmHP: 130, pcHP: 200, lv: 10, pExp:80, act: 62, CNt: 0, ip: null, port: null},
     { nick: "jj", Lx: 100, Ly: 100, Lz: 100, Rz: 50, cla: 3, pmHP: 100, pcHP: 100, lv: 1, pExp:9, act: 62, CNt: 0 ,ip: null, port: null}];
@@ -395,7 +395,6 @@ socket.on('message', function(msg, rinfo) {
         } catch(err) {
             console.error(err);
         }
-        
     }
     if(str.cmd == "PD"){
         mList.forEach(e1=>{
@@ -419,6 +418,49 @@ socket.on('message', function(msg, rinfo) {
                         }
                         if(AttHp < 0){
                             //사망
+                        }
+                    }
+                })
+            }
+        })
+    }
+    if(str.cmd == "MD"){
+        
+        mList.forEach(e1=>{
+            if(str.mId == e1.mID){
+                pList.forEach(e2=>{
+                    if(str.nick == e2.nick){
+                        let MPxp =  e1.mExp + e2.pExp + 100  //100은 100이 넘는 경우를 보기 위해 잠시 적어 놓은 것. ㄴㄴ
+                        
+                        if(MPxp > 100)
+                        {  
+                            e2.lv++
+                            e2.pExp = 0
+                            //레벨업 시켜준다.
+                            let message = JSON.stringify({cmd: "Lv", nick: e2.nick, pExp: e2.pExp, lv: e2.lv })
+                            let sendMsg = JSON.stringify({Buffer: message.length, cmd: "Lv", nick: e2.nick,pExp: e2.pExp, lv: e2.lv})
+                            socket.send(sendMsg, 0, sendMsg.length, e2.port, e2.ip, 
+                                function(err) {
+                                    if (err) {
+                                        console.log('메세지 전송 실패');
+                                        return;
+                                    }
+                                }
+                            )
+                        }
+                        else{
+                            //참여자 배열에 업데이트 해준다. 
+                            e2.pExp = MPxp
+                            let message = JSON.stringify({cmd: "Lv", nick: e2.nick, pExp: e2.pExp, lv: e2.lv })
+                            let sendMsg = JSON.stringify({Buffer: message.length, cmd: "Lv", nick: e2.nick,pExp: e2.pExp, lv: e2.lv})
+                            socket.send(sendMsg, 0, sendMsg.length, e2.port, e2.ip, 
+                                function(err) {
+                                    if (err) {
+                                        console.log('메세지 전송 실패');
+                                        return;
+                                    }
+                                }
+                            )
                         }
                     }
                 })

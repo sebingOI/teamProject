@@ -10,6 +10,8 @@ var CN = JSON.stringify({ cmd: "CN", nick: "kk", CNt: 20});
 var MOVE = JSON.stringify({ cmd: "move", nick: "kk", Lx: 441.45, Ly: 456.7845, Lz: 930.156, Rz:122, act: 61});
 var mAtt = JSON.stringify({ cmd: "mAtt", mID: 12, act: 92, nick:"kk" })
 var PD = JSON.stringify({ cmd: "PD", nick:"kk", pcHP: 50, mID: 2})
+var MD = JSON.stringify({ cmd: "MD", nick:"kk", mId:3})
+
 
 var client = dgram.createSocket('udp4');
 
@@ -42,6 +44,13 @@ setTimeout(()=>{
         if (err) throw err;
         console.log('UDP message send to ' + HOST +':'+ PORT);
     });
+}, 1000);
+
+setTimeout(()=>{
+    client.send(MD, 0, MD.length, PORT, HOST, function(err, bytes) {
+        if (err) throw err;
+        console.log('UDP message send to ' + HOST +':'+ PORT);
+    })
 }, 1000);
 
 client.on('message',function(msg,rinfo){
@@ -91,6 +100,10 @@ client.on('message',function(msg,rinfo){
 
     if(msgIN.cmd == "PD"){
         console.log(msgIN)
+    }
+
+    if(msgIN.cmd == "Lv"){
+        console.log(msgIN);
     }
 });
 
