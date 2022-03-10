@@ -15,9 +15,15 @@ const mList = [{ mID: 1, mcHP: 100, cLx: -2400, cLy: -9510, cLz: -111.6, cRz: 90
     { mID: 11, mcHP: 100, cLx: 1870, cLy: -250, cLz: 152, cRz: 150, Act: 101, mRT: 10000,mAtt:10,mExp: 3  },
     { mID: 21, mcHP: 500, cLx: -7210, cLy: -7360, cLz: -98, cRz: 100, mAct: 101, mRT: 30000,mAtt:25,mExp: 30 },
     { mID: 22, mcHP: 500, cLx: -8070, cLy: 680, cLz:  62, cRz: 30, mAct: 101, mRT: 30000,mAtt:25,mExp: 30 }];
+<<<<<<< HEAD
     const pList = [{ nick: "kk", Lx: 200, Ly: 200, Lz: 200, Rz: 200, cla: 1, pmHP: 100, pcHP: 0, lv: 1, pExp:9, act: 62, CNt: 0, ip: null, port: null},
     { nick: "pd", Lx: 300.1232, Ly: 500.21, Lz: 700.193, Rz: 31.724, cla: 2, pmHP: 130, pcHP: 200, lv: 10, pExp:80, act: 62, CNt: 0, ip: null, port: null},
     { nick: "jj", Lx: 100, Ly: 100, Lz: 100, Rz: 50, cla: 3, pmHP: 100, pcHP: 100, lv: 1, pExp:9, act: 62, CNt: 0 ,ip: null, port: null}];
+=======
+    const pList = [{ nick: "kk", Lx: 200, Ly: 200, Lz: 200, Rz: 200, cla: 1, pmHP: 100, pcHP: 30, lv: 1, pExp:9, act: 62, CNt: 0, ip: null, port: null}]
+    //{ nick: "pd", Lx: 300.1232, Ly: 500.21, Lz: 700.193, Rz: 31.724, cla: 2, pmHP: 130, pcHP: 200, lv: 10, pExp:80, act: 62, CNt: 0, ip: null, port: null},
+    //{ nick: "jj", Lx: 100, Ly: 100, Lz: 100, Rz: 50, cla: 3, pmHP: 100, pcHP: 100, lv: 1, pExp:9, act: 62, CNt: 0 ,ip: null, port: null}];
+>>>>>>> fb2dc78ecd8004111825d2fd1f5346feb00d236a
 let cnt = 6;
     socket.bind(9000);
 
@@ -320,6 +326,7 @@ socket.on('message', function(msg, rinfo) {
     {
         pList.forEach(element => {
             if(element.nick == str.nick){
+<<<<<<< HEAD
                 let Heal = element.pmHP / 2;
                 if(element.pcHP + Heal > element.pmHP)
                 {
@@ -371,6 +378,31 @@ socket.on('message', function(msg, rinfo) {
                 // console.log(element.pcHP)
                 // console.log(pList);
 
+=======
+                //console.log(element.pcHP)
+                element.pcHP += (element.pmHP / 2);
+                if(element.pcHP >= element.pmHP) element.pcHP = element.pmHP;
+                try{
+                    let message = JSON.stringify({cmd: "heal", nick: element.nick, pcHP: element.pcHP})
+                    let sendMsg = JSON.stringify({Buffer: message.length, cmd: "heal", nick: element.nick, pcHP: element.pcHP})
+                    //console.log(rinfo.port, ' ', rinfo.address);
+                    pList.forEach(e=>{
+                        if(e.nick == str.nick)
+                        {
+                            socket.send(sendMsg, 0, sendMsg.length, e.port, e.ip, 
+                                function(err) {
+                                    if (err) {
+                                        //console.log('메세지 전송 실패');
+                                        return;
+                                    }
+                                }
+                            )
+                        }
+                    })
+                } catch(err) {
+                    console.error(err);
+                }
+>>>>>>> fb2dc78ecd8004111825d2fd1f5346feb00d236a
             }
         })
     }

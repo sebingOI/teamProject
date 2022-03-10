@@ -11,7 +11,12 @@ var MOVE = JSON.stringify({ cmd: "move", nick: "kk", Lx: 441.45, Ly: 456.7845, L
 var mAtt = JSON.stringify({ cmd: "mAtt", mID: 12, act: 92, nick:"kk" })
 var PD = JSON.stringify({ cmd: "PD", nick:"kk", pcHP: 50, mID: 2})
 var MD = JSON.stringify({ cmd: "MD", nick:"kk", mId:3})
+<<<<<<< HEAD
 var HEAL = JSON.stringify({ cmd: "heal", nick: "kk", pcHP: 20});
+=======
+var HEAL = JSON.stringify({ cmd: "heal", nick: "kk", act: 62});
+
+>>>>>>> fb2dc78ecd8004111825d2fd1f5346feb00d236a
 
 var client = dgram.createSocket('udp4');
 
@@ -39,12 +44,12 @@ setTimeout(()=>{
     });
 }, 1000)
 
-setTimeout(()=>{
-    client.send(mAtt, 0, mAtt.length, PORT, HOST, function(err, bytes) {
-        if (err) throw err;
-        console.log('UDP message send to ' + HOST +':'+ PORT);
-    });
-}, 1000);
+// setTimeout(()=>{
+//     client.send(mAtt, 0, mAtt.length, PORT, HOST, function(err, bytes) {
+//         if (err) throw err;
+//         console.log('UDP message send to ' + HOST +':'+ PORT);
+//     });
+// }, 1000);
 
 setTimeout(()=>{
     client.send(MD, 0, MD.length, PORT, HOST, function(err, bytes) {
@@ -53,12 +58,20 @@ setTimeout(()=>{
     })
 }, 1000);
 
+<<<<<<< HEAD
 // setTimeout(()=>{
 //     client.send(HEAL, 0, HEAL.length, PORT, HOST, function(err, bytes) {
 //         if (err) throw err;
 //         console.log('UDP message send to ' + HOST +':'+ PORT);
 //     })
 // }, 1000);
+=======
+setTimeout(()=>{
+    client.send(HEAL, 0, HEAL.length, PORT, HOST, function(err, byte) {
+        if (err) throw err;
+    })
+}, 1000);
+>>>>>>> fb2dc78ecd8004111825d2fd1f5346feb00d236a
 
 client.on('message',function(msg,rinfo){
     //console.log(JSON.parse(msg.toString()));
@@ -119,6 +132,10 @@ client.on('message',function(msg,rinfo){
 
     if(msgIN.cmd == "GO")
     {
+        console.log(msgIN);
+    }
+
+    if(msgIN.cmd == "heal"){
         console.log(msgIN);
     }
 });
