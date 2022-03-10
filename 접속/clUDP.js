@@ -1,17 +1,17 @@
 var PORT = 9000;
 var HOST = '127.0.0.1';
 var dgram = require('dgram');
-var CS = JSON.stringify({ cmd: "CS", id: "acc" });
-var DBS = JSON.stringify({ cmd: "DBs", nick: "kk" })
-var CLO = JSON.stringify({ cmd: "cLo", nick: "kk" })
+var CS = JSON.stringify({ cmd: "CS", id: "gj1" });
+var DBS = JSON.stringify({ cmd: "DBs", nick: "221" })
+var CLO = JSON.stringify({ cmd: "cLo", nick: "221" })
 var MAO = JSON.stringify({ cmd: "mAo", mID: 11 })
-var CC = JSON.stringify({cmd: "CC", id: "acc", cla: 1, pAtt: 1, pmHP: 10});
-var CN = JSON.stringify({ cmd: "CN", nick: "kk", CNt: 20});
-var MOVE = JSON.stringify({ cmd: "move", nick: "kk", Lx: 441.45, Ly: 456.7845, Lz: 930.156, Rz:122, act: 61});
-var mAtt = JSON.stringify({ cmd: "mAtt", mID: 12, act: 92, nick:"kk" })
-var PD = JSON.stringify({ cmd: "PD", nick:"kk", pcHP: 50, mID: 2})
-var MD = JSON.stringify({ cmd: "MD", nick:"kk", mId:3})
-var HEAL = JSON.stringify({ cmd: "heal", nick: "kk", pcHP: 20});
+var CC = JSON.stringify({cmd: "CC", id: "gj1", cla: 1, pAtt: 1, pmHP: 10});
+var CN = JSON.stringify({ cmd: "CN", nick: "221", CNt: 20});
+var MOVE = JSON.stringify({ cmd: "move", nick: "221", Lx: 441.45, Ly: 456.7845, Lz: 930.156, Rz:122, act: 61});
+var mAtt = JSON.stringify({ cmd: "mAtt", mID: 12, act: 92, nick:"221" })
+var PD = JSON.stringify({ cmd: "PD", nick:"221", pcHP: 50, mID: 2})
+var MD = JSON.stringify({ cmd: "MD", nick:"221", mId:3})
+var HEAL = JSON.stringify({ cmd: "heal", nick: "221", pcHP: 20});
 
 var client = dgram.createSocket('udp4');
 
@@ -60,70 +60,74 @@ setTimeout(()=>{
 }, 1000);
 
 client.on('message',function(msg,rinfo){
-    //console.log(JSON.parse(msg.toString()));
+    console.log(JSON.parse(msg.toString()));
     const msgIN = JSON.parse(msg.toString())
     if (msgIN.cmd == 'CC') {
         client.send(CC, 0, CC.length, PORT, HOST, function(err, bytes) {
             if (err) throw err;
-            //console.log('UDP message send to' + HOST + ":" + PORT);
+            console.log('UDP message send to' + HOST + ":" + PORT);
         });
     }
     //const udbin = JSON.parse(msg.toString())
     if (msgIN.cmd == 'uDB') {
         client.send(DBS, 0, DBS.length, PORT, HOST, function(err, bytes) {
             if (err) throw err;
-            //console.log('UDP message send to' + HOST + ":" + PORT);
+            console.log('UDP message send to' + HOST + ":" + PORT);
         });
     }
     //const cloin = JSON.parse(msg.toString());
     if (msgIN.cmd == "cLs") {
         client.send(CLO, 0, CLO.length, PORT, HOST, function(err, bytes) {
             if (err) throw err;
-            //console.log('UDP message send to' + HOST + ":" + PORT);
+            console.log('UDP message send to' + HOST + ":" + PORT);
         });
     }
     //const maoin = JSON.parse(msg.toString());
     if (msgIN.cmd == "mAs") {
         client.send(MAO, 0, MAO.length, PORT, HOST, function(err, bytes) {
             if (err) throw err;
-            //console.log('UDP message send to' + HOST + ":" + PORT);
+            console.log('UDP message send to' + HOST + ":" + PORT);
         });
     }
 
-    if(msgIN.cmd == "move")
-    {
-        //console.log(msgIN);
-    }
+    // if(msgIN.cmd == "move")
+    // {
+    //     //console.log(msgIN);
+    // }
 
-    if(msgIN.cmd == "mAtt")
-    {
-        // console.log(msgIN)
-        client.send(PD, 0, PD.length, PORT, HOST, function(err, bytes) {
-            if (err) throw err;
-            //console.log('UDP message send to' + HOST + ":" + PORT);
-        });
-    }
+    // if(msgIN.cmd == "mAtt")
+    // {
+    //     // console.log(msgIN)
+    //     client.send(PD, 0, PD.length, PORT, HOST, function(err, bytes) {
+    //         if (err) throw err;
+    //         //console.log('UDP message send to' + HOST + ":" + PORT);
+    //     });
+    // }
 
-    if(msgIN.cmd == "PD"){
-        //console.log(msgIN)
-    }
+    // if(msgIN.cmd == "PD"){
+    //     //console.log(msgIN)
+    // }
 
-    if(msgIN.cmd == "Lv"){
-        //console.log(msgIN);
-    }
+    // if(msgIN.cmd == "Lv"){
+    //     //console.log(msgIN);
+    // }
 
-    if(msgIN.cmd == "heal"){
-        console.log(msgIN);
-    }
+    // if(msgIN.cmd == "heal"){
+    //     console.log(msgIN);
+    // }
 
-    if(msgIN.cmd == "GO")
-    {
-        console.log(msgIN);
-    }
+    // if(msgIN.cmd == "GO")
+    // {
+    //     console.log(msgIN);
+    // }
 
-    if(msgIN.cmd == "heal"){
-        console.log(msgIN);
-    }
+    // if(msgIN.cmd == "heal"){
+    //     console.log(msgIN);
+    // }
+
+    // if(msgIN.cmd == "MD") {
+    //     console.log(msgIN);
+    // }
 });
 
 // client.on('message',function(msg,rinfo){

@@ -18,7 +18,7 @@ const mList = [{ mID: 1, mcHP: 100, cLx: -2400, cLy: -9510, cLz: -111.6, cRz: 90
     const pList = [{ nick: "kk", Lx: 200, Ly: 200, Lz: 200, Rz: 200, cla: 1, pmHP: 100, pcHP: 0, lv: 1, pExp:9, act: 62, CNt: 0, ip: null, port: null},
     { nick: "pd", Lx: 300.1232, Ly: 500.21, Lz: 700.193, Rz: 31.724, cla: 2, pmHP: 130, pcHP: 200, lv: 10, pExp:80, act: 62, CNt: 0, ip: null, port: null},
     { nick: "jj", Lx: 100, Ly: 100, Lz: 100, Rz: 50, cla: 3, pmHP: 100, pcHP: 100, lv: 1, pExp:9, act: 62, CNt: 0 ,ip: null, port: null}];
-    const pList = [{ nick: "kk", Lx: 200, Ly: 200, Lz: 200, Rz: 200, cla: 1, pmHP: 100, pcHP: 30, lv: 1, pExp:9, act: 62, CNt: 0, ip: null, port: null}]
+    //const pList = [{ nick: "kk", Lx: 200, Ly: 200, Lz: 200, Rz: 200, cla: 1, pmHP: 100, pcHP: 30, lv: 1, pExp:9, act: 62, CNt: 0, ip: null, port: null}]
     //{ nick: "pd", Lx: 300.1232, Ly: 500.21, Lz: 700.193, Rz: 31.724, cla: 2, pmHP: 130, pcHP: 200, lv: 10, pExp:80, act: 62, CNt: 0, ip: null, port: null},
     //{ nick: "jj", Lx: 100, Ly: 100, Lz: 100, Rz: 50, cla: 3, pmHP: 100, pcHP: 100, lv: 1, pExp:9, act: 62, CNt: 0 ,ip: null, port: null}];
 let cnt = 6;
@@ -195,9 +195,10 @@ socket.on('message', function(msg, rinfo) {
                 where: { id: str.id }
             })
             .then(result => {
+                //console.log(result);
                 //접속 시 유저 객체에 ip주소와 port번호 저장
                 pList.forEach(e=>{
-                    if(result.id == str.id)
+                    if(e.id == str.id)
                     {
                         e.ip = rinfo.address;
                         e.port = rinfo.port;
@@ -323,7 +324,6 @@ socket.on('message', function(msg, rinfo) {
     {
         pList.forEach(element => {
             if(element.nick == str.nick){
-<<<<<<< HEAD
                 let Heal = element.pmHP / 2;
                 if(element.pcHP + Heal > element.pmHP)
                 {
@@ -525,6 +525,27 @@ socket.on('message', function(msg, rinfo) {
             }
         })
     }
+    if (str.cmd = "att") {
+        try{
+            let message = JSON.stringify({cmd: "att", nick: str.nick })
+            let sendMsg = JSON.stringify({Buffer: message.length, cmd: "att", nick: str.nick })
+            pList.forEach(e=>{
+                if(e.nick == str.nick){
+                    socket.send(sendMsg, 0, sendMsg.length, e.port, e.ip, 
+                        function(err) {
+                            if (err) {
+                                console.log('메세지 전송 실패');
+                                return;
+                            }
+                        }
+                    )
+                }
+            })
+            //console.log('att 전송 성공');
+        } catch(err) {
+            console.error(err);
+        }
+    }
     if(str.cmd == "MD"){
         
         mList.forEach(e1=>{
@@ -532,35 +553,51 @@ socket.on('message', function(msg, rinfo) {
                 pList.forEach(e2=>{
                     if(str.nick == e2.nick){
                         let MPxp =  e1.mExp + e2.pExp
-                        if(MPxp > 100)
-                        {  
-                            e2.lv++
-                            e2.pExp = 0
-                            //레벨업 시켜준다.
-                            let message = JSON.stringify({cmd: "Lv", nick: e2.nick, pExp: e2.pExp, lv: e2.lv })
-                            let sendMsg = JSON.stringify({Buffer: message.length, cmd: "Lv", nick: e2.nick,pExp: e2.pExp, lv: e2.lv})
-                            socket.send(sendMsg, 0, sendMsg.length, e2.port, e2.ip, 
-                                function(err) {
-                                    if (err) {
-                                        console.log('메세지 전송 실패');
-                                        return;
+                        let mHP = e1.mcHP - e2.pAtt;
+                        if (mHP > 0) {
+                            //mList에 mcHP를 업데이트
+                            e1.mcHP = mHP;
+                            let message = JSON.stringify({ cmd: "MD", mcHP: e1.mcHP, mID: e1.mID })
+                                let sendMsg = JSON.stringify({ Buffer: message.length, cmd: "MD", mcHP: e1.mcHP, mID: e1.mID })
+                                socket.send(sendMsg, 0, sendMsg.length, e2.port, e2.ip, 
+                                    function(err) {
+                                        if (err) {
+                                            console.log('메세지 전송 실패');
+                                            return;
+                                        }
                                     }
-                                }
-                            )
-                        }
-                        else{
-                            //참여자 배열에 업데이트 해준다. 
-                            e2.pExp = MPxp
-                            let message = JSON.stringify({cmd: "Lv", nick: e2.nick, pExp: e2.pExp, lv: e2.lv })
-                            let sendMsg = JSON.stringify({Buffer: message.length, cmd: "Lv", nick: e2.nick,pExp: e2.pExp, lv: e2.lv})
-                            socket.send(sendMsg, 0, sendMsg.length, e2.port, e2.ip, 
-                                function(err) {
-                                    if (err) {
-                                        console.log('메세지 전송 실패');
-                                        return;
+                                )
+                        } else if (mHP < 0) {
+                            if(MPxp > 100) // 최대 체력보다 작을 경우 몬스터를 리스폰 처리와 레벨 업 처리를 한다.
+                            {  
+                                e2.lv++
+                                e2.pExp = 0
+                                //레벨업 시켜준다.
+                                let message = JSON.stringify({ cmd: "Lv", nick: e2.nick, pExp: e2.pExp, lv: e2.lv })
+                                let sendMsg = JSON.stringify({ Buffer: message.length, cmd: "Lv", nick: e2.nick,pExp: e2.pExp, lv: e2.lv })
+                                socket.send(sendMsg, 0, sendMsg.length, e2.port, e2.ip, 
+                                    function(err) {
+                                        if (err) {
+                                            console.log('메세지 전송 실패');
+                                            return;
+                                        }
                                     }
-                                }
-                            )
+                                )
+                            }
+                            else{
+                                //참여자 배열에 업데이트 해준다. 
+                                e2.pExp = MPxp
+                                let message = JSON.stringify({cmd: "Lv", nick: e2.nick, pExp: e2.pExp, lv: e2.lv })
+                                let sendMsg = JSON.stringify({Buffer: message.length, cmd: "Lv", nick: e2.nick,pExp: e2.pExp, lv: e2.lv})
+                                socket.send(sendMsg, 0, sendMsg.length, e2.port, e2.ip, 
+                                    function(err) {
+                                        if (err) {
+                                            console.log('메세지 전송 실패');
+                                            return;
+                                        }
+                                    }
+                                )
+                            }
                         }
                     }
                 })
