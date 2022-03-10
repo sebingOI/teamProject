@@ -49,18 +49,18 @@ client.send(CN, 0, CN.length, PORT, HOST, function(err, bytes) {
 //     });
 // }, 1000);
 
-setTimeout(()=>{
-    client.send(MD, 0, MD.length, PORT, HOST, function(err, bytes) {
-        if (err) throw err;
-        console.log('UDP message send to ' + HOST +':'+ PORT);
-    })
-}, 2000);
-setTimeout(()=>{
-    client.send(ATT, 0, ATT.length, PORT, HOST, function(err, bytes) {
-        if (err) throw err;
-        console.log('UDP message send to ' + HOST +':'+ PORT);
-    })
-}, 2000);
+// setTimeout(()=>{
+//     client.send(MD, 0, MD.length, PORT, HOST, function(err, bytes) {
+//         if (err) throw err;
+//         console.log('UDP message send to ' + HOST +':'+ PORT);
+//     })
+// }, 2000);
+// setTimeout(()=>{
+//     client.send(ATT, 0, ATT.length, PORT, HOST, function(err, bytes) {
+//         if (err) throw err;
+//         console.log('UDP message send to ' + HOST +':'+ PORT);
+//     })
+// }, 2000);
 
 // setTimeout(()=>{
 //     client.send(HEAL, 0, HEAL.length, PORT, HOST, function(err, byte) {
