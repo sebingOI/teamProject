@@ -10,10 +10,16 @@ var CN = JSON.stringify({ cmd: "CN", nick: "221", CNt: 20});
 var MOVE = JSON.stringify({ cmd: "move", nick: "221", Lx: 441.45, Ly: 456.7845, Lz: 930.156, Rz:122, act: 61});
 var mAtt = JSON.stringify({ cmd: "mAtt", mID: 12, act: 92, nick:"221" })
 var PD = JSON.stringify({ cmd: "PD", nick:"221", pcHP: 50, mID: 2})
-var MD = JSON.stringify({ cmd: "MD", nick:"221", mId:3})
+var MD = JSON.stringify({ cmd: "MD", nick:"221", mId: 1})
 var HEAL = JSON.stringify({ cmd: "heal", nick: "221", pcHP: 20});
+var ATT = JSON.stringify({ cmd: "att", nick: "221", act: 32 })
 
 var client = dgram.createSocket('udp4');
+
+client.send(CS, 0, CS.length, PORT, HOST, function(err, bytes) {
+    if (err) throw err;
+    console.log('UDP message send to ' + HOST +':'+ PORT);
+});
 
 client.send(CN, 0, CN.length, PORT, HOST, function(err, bytes) {
     if (err) throw err;
@@ -27,17 +33,14 @@ client.send(CN, 0, CN.length, PORT, HOST, function(err, bytes) {
 //     });
 // }, 20000);
 
-client.send(CS, 0, CS.length, PORT, HOST, function(err, bytes) {
-    if (err) throw err;
-    console.log('UDP message send to ' + HOST +':'+ PORT);
-});
 
-setTimeout(()=>{
-    client.send(MOVE, 0, MOVE.length, PORT, HOST, function(err, bytes) {
-        if (err) throw err;
-        console.log('UDP message send to ' + HOST +':'+ PORT);
-    });
-}, 1000)
+
+// setTimeout(()=>{
+//     client.send(MOVE, 0, MOVE.length, PORT, HOST, function(err, bytes) {
+//         if (err) throw err;
+//         console.log('UDP message send to ' + HOST +':'+ PORT);
+//     });
+// }, 1000)
 
 // setTimeout(()=>{
 //     client.send(mAtt, 0, mAtt.length, PORT, HOST, function(err, bytes) {
@@ -51,13 +54,19 @@ setTimeout(()=>{
         if (err) throw err;
         console.log('UDP message send to ' + HOST +':'+ PORT);
     })
-}, 1000);
-
+}, 2000);
 setTimeout(()=>{
-    client.send(HEAL, 0, HEAL.length, PORT, HOST, function(err, byte) {
+    client.send(ATT, 0, ATT.length, PORT, HOST, function(err, bytes) {
         if (err) throw err;
+        console.log('UDP message send to ' + HOST +':'+ PORT);
     })
-}, 1000);
+}, 2000);
+
+// setTimeout(()=>{
+//     client.send(HEAL, 0, HEAL.length, PORT, HOST, function(err, byte) {
+//         if (err) throw err;
+//     })
+// }, 1000);
 
 client.on('message',function(msg,rinfo){
     console.log(JSON.parse(msg.toString()));

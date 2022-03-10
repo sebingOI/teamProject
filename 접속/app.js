@@ -15,9 +15,10 @@ const mList = [{ mID: 1, mcHP: 100, cLx: -2400, cLy: -9510, cLz: -111.6, cRz: 90
     { mID: 11, mcHP: 100, cLx: 1870, cLy: -250, cLz: 152, cRz: 150, Act: 101, mRT: 10000,mAtt:10,mExp: 3  },
     { mID: 21, mcHP: 500, cLx: -7210, cLy: -7360, cLz: -98, cRz: 100, mAct: 101, mRT: 30000,mAtt:25,mExp: 30 },
     { mID: 22, mcHP: 500, cLx: -8070, cLy: 680, cLz:  62, cRz: 30, mAct: 101, mRT: 30000,mAtt:25,mExp: 30 }];
-    const pList = [{ nick: "kk", Lx: 200, Ly: 200, Lz: 200, Rz: 200, cla: 1, pmHP: 100, pcHP: 0, lv: 1, pExp:9, act: 62, CNt: 0, ip: null, port: null},
-    { nick: "pd", Lx: 300.1232, Ly: 500.21, Lz: 700.193, Rz: 31.724, cla: 2, pmHP: 130, pcHP: 200, lv: 10, pExp:80, act: 62, CNt: 0, ip: null, port: null},
-    { nick: "jj", Lx: 100, Ly: 100, Lz: 100, Rz: 50, cla: 3, pmHP: 100, pcHP: 100, lv: 1, pExp:9, act: 62, CNt: 0 ,ip: null, port: null}];
+    const pList = [{ nick: "221", Lx: 200, Ly: 200, Lz: 200, Rz: 200, cla: 1, pmHP: 100, pcHP: 0, lv: 1, pExp:9, act: 62, pAtt: 10, CNt: 0, ip: null, port: null}];
+    // { nick: "pd", Lx: 300.1232, Ly: 500.21, Lz: 700.193, Rz: 31.724, cla: 2, pmHP: 130, pcHP: 200, lv: 10, pExp:80, act: 62, pAtt: 10, CNt: 0, ip: null, port: null},
+    // { nick: "jj", Lx: 100, Ly: 100, Lz: 100, Rz: 50, cla: 3, pmHP: 100, pcHP: 100, lv: 1, pExp:9, act: 62, CNt: 0 ,ip: null, port: null}];
+
     //const pList = [{ nick: "kk", Lx: 200, Ly: 200, Lz: 200, Rz: 200, cla: 1, pmHP: 100, pcHP: 30, lv: 1, pExp:9, act: 62, CNt: 0, ip: null, port: null}]
     //{ nick: "pd", Lx: 300.1232, Ly: 500.21, Lz: 700.193, Rz: 31.724, cla: 2, pmHP: 130, pcHP: 200, lv: 10, pExp:80, act: 62, CNt: 0, ip: null, port: null},
     //{ nick: "jj", Lx: 100, Ly: 100, Lz: 100, Rz: 50, cla: 3, pmHP: 100, pcHP: 100, lv: 1, pExp:9, act: 62, CNt: 0 ,ip: null, port: null}];
@@ -141,53 +142,6 @@ socket.on('message', function(msg, rinfo) {
     str = JSON.parse(msg.toString());
     console.log(str);
 
-    if(str.cmd == "CN")
-    {
-        pList.forEach(element => {
-            if(element.nick == str.nick && element.CNt <= 30){
-                element.CNt = 0;
-            }
-        })
-    }
-
-    if (str.cmd == "GG") {
-        User.findOne({
-            where: {nick: str.nick}
-        }).then(
-            result => {
-                if(result != null){
-                pList.forEach(element => {
-                    if(element.nick == result.nick)
-                    {
-                        result.update({
-                            pcHP: element.pcHP,
-                            Rz: element.Rz,
-                            Lx: element.Lx,
-                            Ly: element.Ly,
-                            Lz: element.Lz,
-                            lv: element.lv,
-                            pAtt: element.pAtt,
-                            pExp: element.pExp
-                        })
-                        .then(
-                            ()=>{
-                                pList.splice(element,1);
-                                
-                                const message = JSON.stringify({cmd:"GG"});
-                                socket.send(message, 0, message.length, rinfo.port, 
-                                function(err){
-                                    if(err){
-                                        return;
-                                    }
-                                })
-                            }
-                        )
-                    }
-                })
-            }}                
-        )
-    }
-
     if (str.cmd == "CS") {
         try {
             const csid = User.findOne({
@@ -245,6 +199,55 @@ socket.on('message', function(msg, rinfo) {
             console.error(err);
         }
     } 
+
+    if(str.cmd == "CN")
+    {
+        pList.forEach(element => {
+            if(element.nick == str.nick && element.CNt <= 30){
+                element.CNt = 0;
+            }
+        })
+    }
+
+    if (str.cmd == "GG") {
+        User.findOne({
+            where: {nick: str.nick}
+        }).then(
+            result => {
+                if(result != null){
+                pList.forEach(element => {
+                    if(element.nick == result.nick)
+                    {
+                        result.update({
+                            pcHP: element.pcHP,
+                            Rz: element.Rz,
+                            Lx: element.Lx,
+                            Ly: element.Ly,
+                            Lz: element.Lz,
+                            lv: element.lv,
+                            pAtt: element.pAtt,
+                            pExp: element.pExp
+                        })
+                        .then(
+                            ()=>{
+                                pList.splice(element,1);
+                                
+                                const message = JSON.stringify({cmd:"GG"});
+                                socket.send(message, 0, message.length, rinfo.port, 
+                                function(err){
+                                    if(err){
+                                        return;
+                                    }
+                                })
+                            }
+                        )
+                    }
+                })
+            }}                
+        )
+    }
+
+    
 
     if (str.cmd == 'CC') {
         try {
@@ -452,6 +455,8 @@ socket.on('message', function(msg, rinfo) {
             console.error(err);
         }
      } 
+
+     
     if (str.cmd == "mAo" && cnt > 0) {
         try {
             clearTimeout(clcnt);
@@ -460,6 +465,7 @@ socket.on('message', function(msg, rinfo) {
             console.error(err);
         }
     } 
+    
     if(str.cmd == "mAtt"){
         try{
             
@@ -525,41 +531,22 @@ socket.on('message', function(msg, rinfo) {
             }
         })
     }
-    if (str.cmd = "att") {
-        try{
-            let message = JSON.stringify({cmd: "att", nick: str.nick })
-            let sendMsg = JSON.stringify({Buffer: message.length, cmd: "att", nick: str.nick })
-            pList.forEach(e=>{
-                if(e.nick == str.nick){
-                    socket.send(sendMsg, 0, sendMsg.length, e.port, e.ip, 
-                        function(err) {
-                            if (err) {
-                                console.log('메세지 전송 실패');
-                                return;
-                            }
-                        }
-                    )
-                }
-            })
-            //console.log('att 전송 성공');
-        } catch(err) {
-            console.error(err);
-        }
-    }
+    
+    
     if(str.cmd == "MD"){
-        
         mList.forEach(e1=>{
             if(str.mId == e1.mID){
                 pList.forEach(e2=>{
                     if(str.nick == e2.nick){
                         let MPxp =  e1.mExp + e2.pExp
                         let mHP = e1.mcHP - e2.pAtt;
+                        console.log(e1.mcHP, e2.pAtt, mHP);
                         if (mHP > 0) {
                             //mList에 mcHP를 업데이트
                             e1.mcHP = mHP;
                             let message = JSON.stringify({ cmd: "MD", mcHP: e1.mcHP, mID: e1.mID })
-                                let sendMsg = JSON.stringify({ Buffer: message.length, cmd: "MD", mcHP: e1.mcHP, mID: e1.mID })
-                                socket.send(sendMsg, 0, sendMsg.length, e2.port, e2.ip, 
+                            let sendMsg = JSON.stringify({ Buffer: message.length, cmd: "MD", mcHP: e1.mcHP, mID: e1.mID })
+                            socket.send(sendMsg, 0, sendMsg.length, e2.port, e2.ip, 
                                     function(err) {
                                         if (err) {
                                             console.log('메세지 전송 실패');
@@ -604,4 +591,27 @@ socket.on('message', function(msg, rinfo) {
             }
         })
     }
+
+    if (str.cmd = "att") {
+        try{
+            let message = JSON.stringify({cmd: "att", nick: str.nick, act: str.act })
+            let sendMsg = JSON.stringify({Buffer: message.length, cmd: "att", nick: str.nick, act: str.act })
+            pList.forEach(e=>{
+                if(e.nick == str.nick){
+                    socket.send(sendMsg, 0, sendMsg.length, e.port, e.ip, 
+                        function(err) {
+                            if (err) {
+                                console.log('메세지 전송 실패');
+                                return;
+                            }
+                        }
+                    )
+                }
+            })
+            //console.log('att 전송 성공');
+        } catch(err) {
+            console.error(err);
+        }
+    }
+
 });
