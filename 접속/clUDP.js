@@ -11,7 +11,7 @@ var MOVE = JSON.stringify({ cmd: "move", nick: "kk", Lx: 441.45, Ly: 456.7845, L
 var mAtt = JSON.stringify({ cmd: "mAtt", mID: 12, act: 92, nick:"kk" })
 var PD = JSON.stringify({ cmd: "PD", nick:"kk", pcHP: 50, mID: 2})
 var MD = JSON.stringify({ cmd: "MD", nick:"kk", mId:3})
-
+var HEAL = JSON.stringify({ cmd: "heal", nick: "kk", pcHP: 20});
 
 var client = dgram.createSocket('udp4');
 
@@ -20,12 +20,12 @@ client.send(CN, 0, CN.length, PORT, HOST, function(err, bytes) {
     console.log('UDP message send to ' + HOST +':'+ PORT);
 });
 
-setInterval(()=>{
-    client.send(CN, 0, CN.length, PORT, HOST, function(err, bytes) {
-        if (err) throw err;
-        console.log('UDP message send to ' + HOST +':'+ PORT);
-    });
-}, 20000);
+// setInterval(()=>{
+//     client.send(CN, 0, CN.length, PORT, HOST, function(err, bytes) {
+//         if (err) throw err;
+//         console.log('UDP message send to ' + HOST +':'+ PORT);
+//     });
+// }, 20000);
 
 client.send(CS, 0, CS.length, PORT, HOST, function(err, bytes) {
     if (err) throw err;
@@ -52,6 +52,13 @@ setTimeout(()=>{
         console.log('UDP message send to ' + HOST +':'+ PORT);
     })
 }, 1000);
+
+// setTimeout(()=>{
+//     client.send(HEAL, 0, HEAL.length, PORT, HOST, function(err, bytes) {
+//         if (err) throw err;
+//         console.log('UDP message send to ' + HOST +':'+ PORT);
+//     })
+// }, 1000);
 
 client.on('message',function(msg,rinfo){
     //console.log(JSON.parse(msg.toString()));
@@ -86,12 +93,12 @@ client.on('message',function(msg,rinfo){
 
     if(msgIN.cmd == "move")
     {
-        console.log(msgIN);
+        //console.log(msgIN);
     }
 
     if(msgIN.cmd == "mAtt")
     {
-        console.log(msgIN)
+        // console.log(msgIN)
         client.send(PD, 0, PD.length, PORT, HOST, function(err, bytes) {
             if (err) throw err;
             //console.log('UDP message send to' + HOST + ":" + PORT);
@@ -99,10 +106,19 @@ client.on('message',function(msg,rinfo){
     }
 
     if(msgIN.cmd == "PD"){
-        console.log(msgIN)
+        //console.log(msgIN)
     }
 
     if(msgIN.cmd == "Lv"){
+        //console.log(msgIN);
+    }
+
+    if(msgIN.cmd == "heal"){
+        console.log(msgIN);
+    }
+
+    if(msgIN.cmd == "GO")
+    {
         console.log(msgIN);
     }
 });
