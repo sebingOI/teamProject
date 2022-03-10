@@ -18,9 +18,7 @@ const mList = [{ mID: 1, mcHP: 100, cLx: -2400, cLy: -9510, cLz: -111.6, cRz: 90
     const pList = [{ nick: "kk", Lx: 200, Ly: 200, Lz: 200, Rz: 200, cla: 1, pmHP: 100, pcHP: 0, lv: 1, pExp:9, act: 62, CNt: 0, ip: null, port: null},
     { nick: "pd", Lx: 300.1232, Ly: 500.21, Lz: 700.193, Rz: 31.724, cla: 2, pmHP: 130, pcHP: 200, lv: 10, pExp:80, act: 62, CNt: 0, ip: null, port: null},
     { nick: "jj", Lx: 100, Ly: 100, Lz: 100, Rz: 50, cla: 3, pmHP: 100, pcHP: 100, lv: 1, pExp:9, act: 62, CNt: 0 ,ip: null, port: null}];
-    const pList = [{ nick: "kk", Lx: 200, Ly: 200, Lz: 200, Rz: 200, cla: 1, pmHP: 100, pcHP: 30, lv: 1, pExp:9, act: 62, CNt: 0, ip: null, port: null}]
-    //{ nick: "pd", Lx: 300.1232, Ly: 500.21, Lz: 700.193, Rz: 31.724, cla: 2, pmHP: 130, pcHP: 200, lv: 10, pExp:80, act: 62, CNt: 0, ip: null, port: null},
-    //{ nick: "jj", Lx: 100, Ly: 100, Lz: 100, Rz: 50, cla: 3, pmHP: 100, pcHP: 100, lv: 1, pExp:9, act: 62, CNt: 0 ,ip: null, port: null}];
+
 let cnt = 6;
     socket.bind(9000);
 
@@ -323,58 +321,6 @@ socket.on('message', function(msg, rinfo) {
     {
         pList.forEach(element => {
             if(element.nick == str.nick){
-<<<<<<< HEAD
-                let Heal = element.pmHP / 2;
-                if(element.pcHP + Heal > element.pmHP)
-                {
-                    element.pcHP = element.pmHP;
-                    try{
-                        let message = JSON.stringify({cmd: "heal", nick: element.nick, act: element.act})
-                        let sendMsg = JSON.stringify({Buffer: message.length, cmd: "heal", nick: element.nick, act: element.act})
-                        //console.log(rinfo.port, ' ', rinfo.address);
-                        pList.forEach(e=>{
-                            if(e.nick == str.nick)
-                            {
-                                socket.send(sendMsg, 0, sendMsg.length, e.port, e.ip, 
-                                    function(err) {
-                                        if (err) {
-                                            //console.log('메세지 전송 실패');
-                                            return;
-                                        }
-                                    }
-                                )
-                            }
-                        })
-                    } catch(err) {
-                        console.error(err);
-                    }
-                } else {
-                    element.pcHP += Heal;
-                    try{
-                        let message = JSON.stringify({cmd: "heal", nick: element.nick, act: element.act})
-                        let sendMsg = JSON.stringify({Buffer: message.length, cmd: "heal", nick: element.nick, act: element.act})
-                        //console.log(rinfo.port, ' ', rinfo.address);
-                        pList.forEach(e=>{
-                            if(e.nick == str.nick)
-                            {
-                                socket.send(sendMsg, 0, sendMsg.length, e.port, e.ip, 
-                                    function(err) {
-                                        if (err) {
-                                            //console.log('메세지 전송 실패');
-                                            return;
-                                        }
-                                    }
-                                )
-                            }
-                        })
-                    } catch(err) {
-                        console.error(err);
-                    }
-                }
-
-                // console.log(element.pcHP)
-                // console.log(pList);
-                //console.log(element.pcHP)
                 element.pcHP += (element.pmHP / 2);
                 if(element.pcHP >= element.pmHP) element.pcHP = element.pmHP;
                 try{
